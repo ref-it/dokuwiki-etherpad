@@ -6,10 +6,6 @@
  * @author  Michael Braun <michael-dev@fami-braun.de>
  */
 
-//ini_set('display_errors', '1');
-//ini_set('display_startup_errors', '1');
-//error_reporting(E_ALL);
-
 // must be run within Dokuwiki
 if (!defined('DOKU_INC')) die();
 
