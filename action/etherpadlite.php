@@ -51,34 +51,34 @@ class action_plugin_etherpadlite_etherpadlite extends DokuWiki_Action_Plugin {
     }
 
     private function getPageID() {
-      global $meta, $rev;
-      assert(is_array($meta[$rev]));
-      if (!empty($this->ep_group)) {
-          return $this->groupid."\$".$meta[$rev]["pageid"];
-      } else {
-          return $meta[$rev]["pageid"];
-      }
+        global $meta, $rev;
+        assert(is_array($meta[$rev]));
+        if (!empty($this->ep_group)) {
+            return $this->groupid."\$".$meta[$rev]["pageid"];
+        } else {
+            return $meta[$rev]["pageid"];
+        }
     }
 
     private function renameCurrentPage() {
-      global $meta, $rev, $ID, $pageid;
+        global $meta, $rev, $ID, $pageid;
 
-      assert(is_array($meta[$rev]));
-      $pageid = $this->getPageID();
+        assert(is_array($meta[$rev]));
+        $pageid = $this->getPageID();
 
-      $text = $this->ep_instance->getText($pageid);
-      $text = (string) $text->text;
+        $text = $this->ep_instance->getText($pageid);
+        $text = (string) $text->text;
 
-      $newpageid = md5(uniqid("dokuwiki:".md5($ID).":$rev:", true));
-      if (!empty($this->ep_group)) {
-          $this->ep_instance->createGroupPad($this->groupid, $newpageid, $text);
-      } else {
-          $this->ep_instance->createPad($newpageid, $text);
-      }
-      $this->ep_instance->deletePad($pageid);
+        $newpageid = md5(uniqid("dokuwiki:".md5($ID).":$rev:", true));
+        if (!empty($this->ep_group)) {
+            $this->ep_instance->createGroupPad($this->groupid, $newpageid, $text);
+        } else {
+            $this->ep_instance->createPad($newpageid, $text);
+        }
+        $this->ep_instance->deletePad($pageid);
 
-      $meta[$rev]["pageid"] = $newpageid;
-      $pageid = $this->getPageID();
+        $meta[$rev]["pageid"] = $newpageid;
+        $pageid = $this->getPageID();
     }
 
     public function handle_logoutconvenience(&$event,$param) {
