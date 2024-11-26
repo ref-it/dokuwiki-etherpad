@@ -77,8 +77,8 @@ GNU General Public License for more details.
 ## Used Software and Artwork
 
 **Etherpad Lite Client Library**\
-© 2011 jwalck (https://github.com/jwalck)\
-© 2011-2012 Tom Hudson (https://github.com/tomnomnom)\
+© 2011 jwalck (https://github.com/jwalck) \
+© 2011-2012 Tom Hudson (https://github.com/tomnomnom) \
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 **Material Design Icons**\
