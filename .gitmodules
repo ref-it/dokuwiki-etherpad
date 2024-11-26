@@ -1,7 +1,6 @@
 [submodule "externals/etherpad-lite-client"]
 	path = externals/etherpad-lite-client
 	url = https://github.com/ref-it/etherpad-lite-client.git
-
 [submodule "externals/material-design-icons"]
 	path = externals/material-design-icons
-	url = https://github.com/Templarian/MaterialDesign
+	url = https://github.com/Templarian/MaterialDesign.git
