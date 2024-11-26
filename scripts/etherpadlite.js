@@ -223,9 +223,9 @@ ep.security_fill = function(data) {
   ep.on_security_writemode_changed();
 
   if (ep.dlg.writePasswordFrm.val() != "") {
-    jQuery(".pad-security").attr("src",ep.imgBase+"lock2.png");
+    jQuery(".pad-security").attr("src",ep.imgBase+"lock.svg"); // lock2
   } else if (ep.dlg.readPasswordFrm.val() != "") {
-    jQuery(".pad-security").attr("src",ep.imgBase+"lock1.png");
+    jQuery(".pad-security").attr("src",ep.imgBase+"lock.svg"); // lock1
   } else {
     jQuery(".pad-security").attr("src",ep.imgBase+"lock-off.svg");
   }
@@ -534,7 +534,7 @@ ep.onCancel = function(event) {
 
 ep.initialize = function() {
   ep.lang = LANG.plugins.etherpadlite;
-  ep.imgBase = ep.config["base"] + "/img/";
+  ep.imgBase = ep.config["base"] + "/externals/material-design-icons/svg/";
   ep.isSaveable = (ep.config["act"] != "locked");
   if (jQuery("#size__ctl").length == 0) {
     console.log("Missing #size__ctl");
