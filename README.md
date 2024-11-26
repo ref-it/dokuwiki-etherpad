@@ -44,7 +44,7 @@ Please refer to the [DokuWiki Documentation](https://www.dokuwiki.org/plugin_ins
 Use the following command to install the plugin into DokuWiki. The path name (etherpadlite in the lib/plugins folder) is important - a different name will not work!
 
 ```
-git clone --recurse-submodules https://github.com/ref-it/DokuWiki-etherpadlite lib/plugins/etherpadlite
+git clone --recurse-submodules https://github.com/ref-it/dokuwiki-etherpadlite lib/plugins/etherpadlite
 ```
 
 ## Configuration
