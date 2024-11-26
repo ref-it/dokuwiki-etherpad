@@ -227,12 +227,12 @@ ep.security_fill = function(data) {
   } else if (ep.dlg.readPasswordFrm.val() != "") {
     jQuery(".pad-security").attr("src",ep.imgBase+"lock1.png");
   } else {
-    jQuery(".pad-security").attr("src",ep.imgBase+"nolock.png");
+    jQuery(".pad-security").attr("src",ep.imgBase+"lock-off.svg");
   }
   if (ep.readOnly) {
-    jQuery(".pad-saveable").attr("src",ep.imgBase+"no-saveable.png");
+    jQuery(".pad-saveable").attr("src",ep.imgBase+"content-save-off.svg");
   } else {
-    jQuery(".pad-saveable").attr("src",ep.imgBase+"saveable.png");
+    jQuery(".pad-saveable").attr("src",ep.imgBase+"content-save.svg");
   }
 
 }
@@ -539,8 +539,8 @@ ep.initialize = function() {
   if (jQuery("#size__ctl").length == 0) {
     console.log("Missing #size__ctl");
   }
-  jQuery("<img/>").addClass("pad-toggle pad-toggle-off").attr("src",ep.imgBase+"toggle_off.png").insertAfter(jQuery("#size__ctl")).click(ep.on_enable);
-  jQuery("<img/>").addClass("pad-toggle pad-toggle-on").attr("src",ep.imgBase+"toggle_on.png").insertAfter(jQuery("#size__ctl")).click(ep.on_disable);
+  jQuery("<img/>").addClass("pad-toggle pad-toggle-off").attr("src",ep.imgBase+"note-edit.svg").insertAfter(jQuery("#size__ctl")).click(ep.on_enable);
+  jQuery("<img/>").addClass("pad-toggle pad-toggle-on").attr("src",ep.imgBase+"note-off.svg").insertAfter(jQuery("#size__ctl")).click(ep.on_disable);
   jQuery("#edbtn__save").clone().attr('id','edbtn__save2').insertAfter('#edbtn__save').click(ep.onSave);
   jQuery("#edbtn__save").addClass("nopad-action-buttons");
   jQuery("#edbtn__save2").addClass("pad-action-buttons");
@@ -559,9 +559,9 @@ ep.initialize = function() {
   jQuery('<div/>').addClass("pad-iframecontainer pad-action-buttons pad-resizable").insertAfter(jQuery('#wiki__text'));
   jQuery('<div/>').addClass("pad-toolbar pad-action-buttons").insertAfter(jQuery('.toolbar'));
   jQuery("<span/>").appendTo(jQuery(".pad-toolbar"));
-  jQuery("<img/>").addClass("pad-close").attr("src",ep.imgBase+"close.png").appendTo(jQuery(".pad-toolbar")).click(ep.on_disable);
-  jQuery("<img/>").addClass("pad-security").attr("src",ep.imgBase+"nolock.png").appendTo(jQuery(".pad-toolbar")).click(ep.on_security);
-  jQuery("<img/>").addClass("pad-saveable").attr("src",ep.imgBase+"no-saveable.png").appendTo(jQuery(".pad-toolbar")).click(ep.on_password_click);
+  jQuery("<img/>").addClass("pad-close").attr("src",ep.imgBase+"close-circle.svg").appendTo(jQuery(".pad-toolbar")).click(ep.on_disable);
+  jQuery("<img/>").addClass("pad-security").attr("src",ep.imgBase+"lock-off.svg").appendTo(jQuery(".pad-toolbar")).click(ep.on_security);
+  jQuery("<img/>").addClass("pad-saveable").attr("src",ep.imgBase+"content-save-off.svg").appendTo(jQuery(".pad-toolbar")).click(ep.on_password_click);
   jQuery(".pad-action-buttons").hide();
   ep.init_security();
   ep.init_password();
