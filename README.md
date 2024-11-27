@@ -31,8 +31,24 @@ Please refer to the etherpad lite dokumentation for its installation steps and r
 To ensure pad permissions and cleanup, the following etherpad lite settings are recommended. They ensure that only users authorized by the DokuWiki plugin can edit a pad and that there are only pads created using the DokuWiki plugin.
 
 ```
-"requireSession" : true,
-"editOnly" : true,
+"requireSession": true,
+"editOnly": true,
+```
+
+Recommended pad options (adjust localization to your own needs):
+
+```
+"noColors": false,
+"showControls": true,
+"showChat": true,
+"showLineNumbers": true,
+"useMonospaceFont": true,
+"userName": null,
+"userColor": null,
+"rtl": false,
+"alwaysShowChat": false,
+"chatAndUsers": false,
+"lang": "de-de",
 ```
 
 ### This Plugin
