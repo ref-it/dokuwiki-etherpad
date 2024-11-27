@@ -16,7 +16,7 @@ The user who is in (DokuWiki) "edit" mode can create a pad to edit and save the 
 
 ## How does it work?
 
-The DokuWiki plugin adds javascript code to the edit page that hooks into the toolbar javascript and adds an extra pad-toogle icon just below the textedit field. This code obviously depends on the template used and has *not* been tested with the most recent DokuWiki default template. The DokuWiki plugin further adds an ajax handler that calls the etherpad lite api as needed and stores the pad details in the DokuWiki page metadata object.
+The DokuWiki plugin adds javascript code to the edit page that hooks into the toolbar javascript and adds an extra pad-toogle icon just below the textedit field. This code obviously depends on the template used and has only been tested with the DokuWiki default template. The DokuWiki plugin further adds an ajax handler that calls the etherpad lite api as needed and stores the pad details in the DokuWiki page metadata object.
 
 The etherpad lite gets its pads assigned to groups, group membership managed and pad passwords assigned by the DokuWiki plugin. Further, the DokuWiki plugin sets browser cookies to authorize the client to use the pad. The latter leads to some cross-domain requirements, though this could as well be fixed by adding extra code to etherpad lite.
 
