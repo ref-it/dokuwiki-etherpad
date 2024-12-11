@@ -30,6 +30,11 @@
     display: block;
 }
 
+.pad-toolbar span {
+    display: inline-block;
+    max-width: calc(100% - 5.5rem);
+}
+
 .pad-resizable {
     position: relative;
     border: thin solid #555555;
