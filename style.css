@@ -27,7 +27,12 @@
 
 .pad-toolbar {
     min-height: 20px;
-    display: block;
+    display: flex;
+}
+
+.pad-toolbar span {
+    padding-right: 1rem;
+    margin-right: auto;
 }
 
 .pad-toolbar span {
