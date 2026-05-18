@@ -28,6 +28,12 @@ The tight integration works using javascript cross-domain message posting, so it
 
 Please refer to the etherpad lite dokumentation for its installation steps and remember to use a production-ready backend.
 
+For this plugin the Etherpad APIKEY authentication method has to be enabled. Create a file called `APIKEY.txt` in the etherpad root directory and set the following in `settings.json`:
+
+```
+"authenticationMethod": "${AUTHENTICATION_METHOD:apikey}",
+```
+
 To ensure pad permissions and cleanup, the following etherpad lite settings are recommended. They ensure that only users authorized by the DokuWiki plugin can edit a pad and that there are only pads created using the DokuWiki plugin.
 
 ```
