@@ -27,13 +27,16 @@ ep.icons = {
   "save-off": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 13H8a1 1 0 0 0-1 1v7"/><path d="M14 8h1"/><path d="M17 21v-4"/><path d="m2 2 20 20"/><path d="M20.41 20.41A2 2 0 0 1 19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 .59-1.41"/><path d="M9 3h6.2a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V15"/></svg>'
 };
 
-ep.setIcon = function($el, name) {
+ep.setIcon = function($el, name, title) {
   $el.html(ep.icons[name]);
+  if (title !== undefined) {
+    $el.attr("title", title);
+  }
   return $el;
 };
 
-ep.makeIcon = function(classes, name) {
-  return ep.setIcon(jQuery("<span/>").addClass(classes), name);
+ep.makeIcon = function(classes, name, title) {
+  return ep.setIcon(jQuery("<span/>").addClass(classes), name, title);
 };
 
 ep.on_disable = function() {
@@ -253,9 +256,9 @@ ep.security_fill = function(data) {
     ep.setIcon(jQuery(".pad-security"), "lock-open");
   }
   if (ep.readOnly) {
-    ep.setIcon(jQuery(".pad-saveable"), "save-off");
+    ep.setIcon(jQuery(".pad-saveable"), "save-off", ep.lang.titleSaveableNo);
   } else {
-    ep.setIcon(jQuery(".pad-saveable"), "save");
+    ep.setIcon(jQuery(".pad-saveable"), "save", ep.lang.titleSaveableYes);
   }
 
 }
@@ -561,8 +564,8 @@ ep.initialize = function() {
   if (jQuery("#size__ctl").length == 0) {
     console.log("Missing #size__ctl");
   }
-  ep.makeIcon("pad-toggle pad-toggle-off", "pencil").insertAfter(jQuery("#size__ctl")).click(ep.on_enable);
-  ep.makeIcon("pad-toggle pad-toggle-on", "pencil-off").insertAfter(jQuery("#size__ctl")).click(ep.on_disable);
+  ep.makeIcon("pad-toggle pad-toggle-off", "pencil", ep.lang.titleOpenPad).insertAfter(jQuery("#size__ctl")).click(ep.on_enable);
+  ep.makeIcon("pad-toggle pad-toggle-on", "pencil-off", ep.lang.titleClosePad).insertAfter(jQuery("#size__ctl")).click(ep.on_disable);
   jQuery("#edbtn__save").clone().attr('id','edbtn__save2').insertAfter('#edbtn__save').click(ep.onSave);
   jQuery("#edbtn__save").addClass("nopad-action-buttons");
   jQuery("#edbtn__save2").addClass("pad-action-buttons");
@@ -581,9 +584,9 @@ ep.initialize = function() {
   jQuery('<div/>').addClass("pad-iframecontainer pad-action-buttons pad-resizable").insertAfter(jQuery('#wiki__text'));
   jQuery('<div/>').addClass("pad-toolbar pad-action-buttons").insertAfter(jQuery('.toolbar'));
   jQuery("<span/>").addClass("pad-toolbar-label").appendTo(jQuery(".pad-toolbar"));
-  ep.makeIcon("pad-close", "circle-x").appendTo(jQuery(".pad-toolbar")).click(ep.on_disable);
-  ep.makeIcon("pad-security", "lock-open").appendTo(jQuery(".pad-toolbar")).click(ep.on_security);
-  ep.makeIcon("pad-saveable", "save-off").appendTo(jQuery(".pad-toolbar")).click(ep.on_password_click);
+  ep.makeIcon("pad-close", "circle-x", ep.lang.titleClosePad).appendTo(jQuery(".pad-toolbar")).click(ep.on_disable);
+  ep.makeIcon("pad-security", "lock-open", ep.lang.titleSecurity).appendTo(jQuery(".pad-toolbar")).click(ep.on_security);
+  ep.makeIcon("pad-saveable", "save-off", ep.lang.titleSaveableNo).appendTo(jQuery(".pad-toolbar")).click(ep.on_password_click);
   jQuery(".pad-action-buttons").hide();
   ep.init_security();
   ep.init_password();
