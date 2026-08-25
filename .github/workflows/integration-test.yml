@@ -1,0 +1,36 @@
+name: Integration test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pad-open-close:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Build and start test stack
+        run: docker compose up -d --build
+
+      - name: Run smoke test (pad open -> close)
+        run: bash docker/smoke-test.sh
+
+      - name: Dump logs on failure
+        if: failure()
+        run: |
+          echo "::group::dokuwiki logs"
+          docker compose logs dokuwiki
+          echo "::endgroup::"
+          echo "::group::etherpad logs"
+          docker compose logs etherpad
+          echo "::endgroup::"
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v

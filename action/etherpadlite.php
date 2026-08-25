@@ -133,6 +133,10 @@ class action_plugin_etherpadlite_etherpadlite extends DokuWiki_Action_Plugin {
         global $ID, $REV, $INFO, $rev, $meta, $pageid, $USERINFO;
         $this->createEPInstance();
 
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
         $remoteUser = (string) ($_SERVER['REMOTE_USER'] ?? '');
         if ($remoteUser !== '') {
             $this->client = $remoteUser;

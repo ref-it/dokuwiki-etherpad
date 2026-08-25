@@ -1,0 +1,38 @@
+services:
+  etherpad:
+    image: etherpad/etherpad:latest
+    network_mode: host
+    environment:
+      - PORT=9001
+      - TITLE=Test Pad
+      - DEFAULT_PAD_TEXT=
+      # the plugin's vendored PHP client only speaks the classic apikey
+      # scheme, not the newer SSO-based auth this image defaults to.
+      - AUTHENTICATION_METHOD=apikey
+    volumes:
+      - etherpad_data:/opt/etherpad-lite/var
+      # APIKEY.txt lives in the app root, NOT under var/, so it is not
+      # covered by the volume above and would be regenerated randomly on
+      # every container recreation unless pinned like this.
+      - ./docker/etherpad/APIKEY.txt:/opt/etherpad-lite/APIKEY.txt:ro
+
+  dokuwiki:
+    build: ./docker/dokuwiki
+    network_mode: host
+    depends_on:
+      - etherpad
+    environment:
+      # Reachable identically from the browser (host) and from PHP inside
+      # this container, because both use network_mode: host.
+      - ETHERPAD_URL=http://localhost:9001
+      - ETHERPAD_APIKEY_FILE=/run/etherpad_apikey.txt
+    volumes:
+      - .:/var/www/html/lib/plugins/etherpadlite:ro
+      - dokuwiki_data:/var/www/html/data
+      - dokuwiki_conf:/var/www/html/conf
+      - ./docker/etherpad/APIKEY.txt:/run/etherpad_apikey.txt:ro
+
+volumes:
+  etherpad_data:
+  dokuwiki_data:
+  dokuwiki_conf:
