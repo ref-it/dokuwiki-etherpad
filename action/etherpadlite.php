@@ -16,7 +16,7 @@ if (!defined('DOKU_TAB')) define('DOKU_TAB', "\t");
 if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
 
 require_once DOKU_PLUGIN.'action.php';
-require_once DOKU_PLUGIN.'etherpadlite/externals/etherpad-lite-client/etherpad-lite-client.php';
+require_once DOKU_PLUGIN.'etherpadlite/inc/EtherpadClient.php';
 
 enum EpAccessMode: string {
     case WikiRead = 'wikiread';
@@ -28,7 +28,7 @@ class action_plugin_etherpadlite_etherpadlite extends DokuWiki_Action_Plugin {
 
     private readonly string $domain;
     private readonly string $ep_url;
-    private readonly EtherpadLiteClient $ep_instance;
+    private readonly EtherpadClient $ep_instance;
     private readonly string $ep_group;
     private readonly string $ep_url_args;
     private readonly string $groupid;
@@ -55,7 +55,7 @@ class action_plugin_etherpadlite_etherpadlite extends DokuWiki_Action_Plugin {
 
         $this->ep_url = rtrim(trim((string) $this->getConf('etherpadlite_url')), '/');
         $epKey = trim((string) $this->getConf('etherpadlite_apikey'));
-        $this->ep_instance = new EtherpadLiteClient($epKey, $this->ep_url.'/api');
+        $this->ep_instance = new EtherpadClient($epKey, $this->ep_url.'/api');
         $this->ep_group = trim((string) $this->getConf('etherpadlite_group'));
         $this->ep_url_args = trim((string) $this->getConf('etherpadlite_urlargs'));
         $this->groupid = (string) ($this->ep_instance->createGroupIfNotExistsFor($this->ep_group)?->groupID ?? '');

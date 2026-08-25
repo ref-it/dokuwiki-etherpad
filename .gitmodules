@@ -1,3 +1,0 @@
-[submodule "externals/etherpad-lite-client"]
-	path = externals/etherpad-lite-client
-	url = https://github.com/ref-it/etherpad-lite-client.git

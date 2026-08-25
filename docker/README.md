@@ -31,4 +31,3 @@ docker compose down -v
 
 - Die Etherpad-`APIKEY.txt` liegt bei `/opt/etherpad-lite/APIKEY.txt` - **außerhalb** des `var/`-Volumes. Deshalb wird sie hier über `docker/etherpad/APIKEY.txt` fest hineingemountet, sonst würde bei jeder Container-Neuerstellung ein neuer Key generiert.
 - Dieses Etherpad-Image nutzt standardmäßig `authenticationMethod: sso`, nicht die klassische API-Key-Auth, die der PHP-Client des Plugins spricht - daher `AUTHENTICATION_METHOD=apikey` in `docker-compose.yml`.
-- `externals/etherpad-lite-client` ist ein Git-Submodul und muss lokal ausgecheckt sein (`git submodule update --init`), sonst fehlt die Client-Klasse im Mount.
