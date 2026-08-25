@@ -84,11 +84,13 @@ class action_plugin_etherpadlite_etherpadlite extends DokuWiki_Action_Plugin {
 
         $text = (string) ($this->ep_instance->getText($pageid)?->text ?? '');
 
+        $authorid = (string) ($this->ep_instance->createAuthorIfNotExistsFor($this->client, $this->clientname)?->authorID ?? '');
+
         $newpageid = $this->generatePageId();
         if ($this->ep_group !== '') {
-            $this->ep_instance->createGroupPad($this->groupid, $newpageid, $text);
+            $this->ep_instance->createGroupPad($this->groupid, $newpageid, $text, $authorid);
         } else {
-            $this->ep_instance->createPad($newpageid, $text);
+            $this->ep_instance->createPad($newpageid, $text, $authorid);
         }
         $this->ep_instance->deletePad($pageid);
 
@@ -403,9 +405,10 @@ class action_plugin_etherpadlite_etherpadlite extends DokuWiki_Action_Plugin {
             return ['error' => $this->getLang('CSRF protection.')];
         }
 
+        $authorid = (string) ($this->ep_instance->createAuthorIfNotExistsFor($this->client, $this->clientname)?->authorID ?? '');
+
         if ($this->ep_group !== '') {
             if (!isset($_SESSION['ep_sessionID'])) {
-                $authorid = (string) ($this->ep_instance->createAuthorIfNotExistsFor($this->client, $this->clientname)?->authorID ?? '');
                 $cookies = $this->ep_instance->createSession($this->groupid, $authorid, time() + 7 * 24 * 60 * 60);
                 $_SESSION['ep_sessionID'] = (string) ($cookies?->sessionID ?? '');
             }
@@ -439,9 +442,9 @@ class action_plugin_etherpadlite_etherpadlite extends DokuWiki_Action_Plugin {
             }
             $pageid = $this->generatePageId();
             if ($this->ep_group !== '') {
-                $this->ep_instance->createGroupPad($this->groupid, $pageid, $text);
+                $this->ep_instance->createGroupPad($this->groupid, $pageid, $text, $authorid);
             } else {
-                $this->ep_instance->createPad($pageid, $text);
+                $this->ep_instance->createPad($pageid, $text, $authorid);
             }
             $meta[$rev] = [];
             $meta[$rev]['pageid'] = $pageid;
@@ -453,9 +456,9 @@ class action_plugin_etherpadlite_etherpadlite extends DokuWiki_Action_Plugin {
             /* in case pad is already deleted, recreate it. Should not happen, but this resolves this kind of conflict. */
             try {
                 if ($this->ep_group !== '') {
-                    $this->ep_instance->createGroupPad($this->groupid, $pageid, '');
+                    $this->ep_instance->createGroupPad($this->groupid, $pageid, '', $authorid);
                 } else {
-                    $this->ep_instance->createPad($pageid, '');
+                    $this->ep_instance->createPad($pageid, '', $authorid);
                 }
             } catch (Throwable) {
             }
