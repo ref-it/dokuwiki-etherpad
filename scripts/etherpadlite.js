@@ -40,7 +40,6 @@ ep.makeIcon = function(classes, name, title) {
 };
 
 ep.on_disable = function() {
-  console.log('1');
   if (ep.isOwner) {
   jQuery.post(
       DOKU_BASE + 'lib/exe/ajax.php',
@@ -302,7 +301,6 @@ ep.on_enable_password = function(txt) {
 }
 
 ep.on_enable = function() {
-  console.log("on_enable");
   return ep.on_re_enable(false);
 }
 
@@ -341,32 +339,24 @@ ep.on_re_enable = function(reopen) {
     ep.aceWasEnabled = ep.aceIsEnabled();
     ep.cmWasEnabled = ep.cmIsEnabled();
   }
-  console.log("huhu1");
-
   ep.aceHide();
   ep.cmHide();
-
-  console.log("huhu2");
 
   self.setTimeout(ep.on_re_enable_cont, 500);
 }
 
 ep.on_re_enable_cont = function() {
-  console.log("on_re_enable_cont");
   var text = "";
   if (ep.isSaveable) {
       text = jQuery('#wiki__text').val();
   }
   /* commit */
-  console.log("huhu3");
-  console.log(ep.config);
   jQuery.post(
       DOKU_BASE + 'lib/exe/ajax.php',
       { 'id' : ep.config["id"], "rev" : ep.config["rev"], "call" : "pad_open", "text" : text,
         'sectok' : jQuery('input[name=sectok]').val(),
         "isSaveable" : ep.isSaveable, "accessPassword" : ep.password },
       function(data) {
-          console.log("4");
           if (data.error) {
              if (data.askPassword) {
                ep.on_enable_password(data.error);
@@ -374,10 +364,8 @@ ep.on_re_enable_cont = function() {
                alert(data.error);
              }
           } else {
-             console.log("5");
              ep.isOwner = data.isOwner;
              ep.opened = true;
-             console.log("open: true; re_enable_cont");
              document.cookie="sessionID="+data.sessionID+";domain="+data.domain+";path=/";
              jQuery('.pad-toggle').hide();
              jQuery('.pad-toggle-on').show();
@@ -600,7 +588,6 @@ ep.initialize = function() {
           if (data.error) {
             alert(data.error);
           } else if (data.exists) {
-            console.log("auto-start pad");
             ep.on_enable();
           }
       }
