@@ -31,6 +31,11 @@ wait_for() {
 wait_for "${BASE}/doku.php" "dokuwiki"
 wait_for "${ETHERPAD_BASE}/" "etherpad"
 
+echo "==> clearing leftover state from a previous run (this script is idempotent; the plugin never calls unlock(), so DokuWiki's own page lock would otherwise outlive the test and cause a false failure)..."
+docker compose exec -T dokuwiki sh -c "
+    rm -rf /var/www/html/data/locks/* /var/www/html/data/meta/${PAGE}.* /var/www/html/data/pages/${PAGE}.txt /var/www/html/data/attic/${PAGE}.*
+" || true
+
 echo "==> seeding test page..."
 docker compose exec -T dokuwiki sh -c "
     mkdir -p /var/www/html/data/pages &&
