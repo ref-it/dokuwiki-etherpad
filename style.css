@@ -56,8 +56,14 @@
 
 .pad-resizable {
     position: relative;
-    border: thin solid #555555;
+    border: thin solid #cccccc;
     height: 600px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .pad-resizable {
+        border-color: #444444;
+    }
 }
 
 .pad-iframe {
