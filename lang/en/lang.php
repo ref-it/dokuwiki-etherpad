@@ -33,4 +33,5 @@ $lang["Permission denied - page locked by somebody else"] = "Permission denied -
 $lang["There is no such pad."] = "There is no such pad.";
 $lang["You need to create (save) the non-empty page first."] = "You need to create (save) the non-empty page first.";
 $lang["Permission denied - pad is owned by %s, who needs to lock (edit) the page."] = "Permission denied - pad is owned by use \"%s\", who needs to lock (edit) the page.";
+$lang["Server-Fehler (Pad-Plugin)."] = "Server error (pad plugin). Details have been recorded in the server log.";
 

@@ -1,10 +1,28 @@
 .pad-toggle, .pad-close, .pad-lock, .pad-security, .pad-saveable {
     float: right;
     cursor: pointer;
+    display: inline-block;
     width: 24px;
     height: 24px;
     margin-right: 8px;
     z-index: 210;
+}
+
+/* icons are inline SVGs with stroke="currentColor" (see ep.icons in
+   etherpadlite.js) so they pick up the surrounding text color and stay
+   visible in both light and dark themes */
+.pad-toggle svg, .pad-close svg, .pad-lock svg, .pad-security svg, .pad-saveable svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* fallback for templates/contexts that don't already set a light-enough
+   text color under a dark color scheme */
+@media (prefers-color-scheme: dark) {
+    .pad-toggle, .pad-close, .pad-lock, .pad-security, .pad-saveable {
+        color: #e8e8e8;
+    }
 }
 
 .pad-toggle {
@@ -31,7 +49,7 @@
     margin-bottom: .5rem;
 }
 
-.pad-toolbar span {
+.pad-toolbar-label {
     padding-right: 1rem;
     margin-right: auto;
 }

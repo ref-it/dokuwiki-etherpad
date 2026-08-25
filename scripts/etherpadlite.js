@@ -1,6 +1,5 @@
 var ep = { };
 
-ep.imgBase = null;
 ep.config = etherpad_lite_config;
 ep.aceWasEnabled = false;
 ep.cmWasEnabled = false;
@@ -12,6 +11,30 @@ ep.lang = null;
 ep.password = "";
 ep.opened = false;
 ep.hasPadPlugin = false;
+
+/* icons: inline Lucide SVGs (see images/icons/*.svg for the vendored
+   originals and license). Inlined directly in the DOM - rather than
+   loaded as external <img>/mask files - so their stroke="currentColor"
+   picks up the surrounding text color via normal CSS inheritance and
+   stays visible in both light and dark themes. */
+ep.icons = {
+  "pencil": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>',
+  "pencil-off": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 10-6.157 6.162a2 2 0 0 0-.5.833l-1.322 4.36a.5.5 0 0 0 .622.624l4.358-1.323a2 2 0 0 0 .83-.5L14 13.982"/><path d="m12.829 7.172 4.359-4.346a1 1 0 1 1 3.986 3.986l-4.353 4.353"/><path d="m15 5 4 4"/><path d="m2 2 20 20"/></svg>',
+  "circle-x": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
+  "lock": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+  "lock-open": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>',
+  "save": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>',
+  "save-off": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 13H8a1 1 0 0 0-1 1v7"/><path d="M14 8h1"/><path d="M17 21v-4"/><path d="m2 2 20 20"/><path d="M20.41 20.41A2 2 0 0 1 19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 .59-1.41"/><path d="M9 3h6.2a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V15"/></svg>'
+};
+
+ep.setIcon = function($el, name) {
+  $el.html(ep.icons[name]);
+  return $el;
+};
+
+ep.makeIcon = function(classes, name) {
+  return ep.setIcon(jQuery("<span/>").addClass(classes), name);
+};
 
 ep.on_disable = function() {
   console.log('1');
@@ -223,16 +246,16 @@ ep.security_fill = function(data) {
   ep.on_security_writemode_changed();
 
   if (ep.dlg.writePasswordFrm.val() != "") {
-    jQuery(".pad-security").attr("src",ep.imgBase+"lock.svg"); // lock2
+    ep.setIcon(jQuery(".pad-security"), "lock"); // lock2
   } else if (ep.dlg.readPasswordFrm.val() != "") {
-    jQuery(".pad-security").attr("src",ep.imgBase+"lock.svg"); // lock1
+    ep.setIcon(jQuery(".pad-security"), "lock"); // lock1
   } else {
-    jQuery(".pad-security").attr("src",ep.imgBase+"lock-off.svg");
+    ep.setIcon(jQuery(".pad-security"), "lock-open");
   }
   if (ep.readOnly) {
-    jQuery(".pad-saveable").attr("src",ep.imgBase+"content-save-off.svg");
+    ep.setIcon(jQuery(".pad-saveable"), "save-off");
   } else {
-    jQuery(".pad-saveable").attr("src",ep.imgBase+"content-save.svg");
+    ep.setIcon(jQuery(".pad-saveable"), "save");
   }
 
 }
@@ -358,7 +381,7 @@ ep.on_re_enable_cont = function() {
              var htext = (ep.isOwner ? ep.lang.padowner : ep.lang.padnoowner);
              htext = htext.replace(/%s/, ep.config["id"]);
              htext = htext.replace(/%d/, ep.config["rev"]);
-             jQuery('.pad-toolbar span').html(htext);
+             jQuery('.pad-toolbar-label').html(htext);
 
              h = screen.height - 500;
 	           if (h < 300) {
@@ -534,13 +557,12 @@ ep.onCancel = function(event) {
 
 ep.initialize = function() {
   ep.lang = LANG.plugins.etherpadlite;
-  ep.imgBase = ep.config["base"] + "/externals/material-design-icons/svg/";
   ep.isSaveable = (ep.config["act"] != "locked");
   if (jQuery("#size__ctl").length == 0) {
     console.log("Missing #size__ctl");
   }
-  jQuery("<img/>").addClass("pad-toggle pad-toggle-off").attr("src",ep.imgBase+"note-edit.svg").insertAfter(jQuery("#size__ctl")).click(ep.on_enable);
-  jQuery("<img/>").addClass("pad-toggle pad-toggle-on").attr("src",ep.imgBase+"note-off.svg").insertAfter(jQuery("#size__ctl")).click(ep.on_disable);
+  ep.makeIcon("pad-toggle pad-toggle-off", "pencil").insertAfter(jQuery("#size__ctl")).click(ep.on_enable);
+  ep.makeIcon("pad-toggle pad-toggle-on", "pencil-off").insertAfter(jQuery("#size__ctl")).click(ep.on_disable);
   jQuery("#edbtn__save").clone().attr('id','edbtn__save2').insertAfter('#edbtn__save').click(ep.onSave);
   jQuery("#edbtn__save").addClass("nopad-action-buttons");
   jQuery("#edbtn__save2").addClass("pad-action-buttons");
@@ -558,10 +580,10 @@ ep.initialize = function() {
   jQuery('.pad-toggle-off').show();
   jQuery('<div/>').addClass("pad-iframecontainer pad-action-buttons pad-resizable").insertAfter(jQuery('#wiki__text'));
   jQuery('<div/>').addClass("pad-toolbar pad-action-buttons").insertAfter(jQuery('.toolbar'));
-  jQuery("<span/>").appendTo(jQuery(".pad-toolbar"));
-  jQuery("<img/>").addClass("pad-close").attr("src",ep.imgBase+"close-circle.svg").appendTo(jQuery(".pad-toolbar")).click(ep.on_disable);
-  jQuery("<img/>").addClass("pad-security").attr("src",ep.imgBase+"lock-off.svg").appendTo(jQuery(".pad-toolbar")).click(ep.on_security);
-  jQuery("<img/>").addClass("pad-saveable").attr("src",ep.imgBase+"content-save-off.svg").appendTo(jQuery(".pad-toolbar")).click(ep.on_password_click);
+  jQuery("<span/>").addClass("pad-toolbar-label").appendTo(jQuery(".pad-toolbar"));
+  ep.makeIcon("pad-close", "circle-x").appendTo(jQuery(".pad-toolbar")).click(ep.on_disable);
+  ep.makeIcon("pad-security", "lock-open").appendTo(jQuery(".pad-toolbar")).click(ep.on_security);
+  ep.makeIcon("pad-saveable", "save-off").appendTo(jQuery(".pad-toolbar")).click(ep.on_password_click);
   jQuery(".pad-action-buttons").hide();
   ep.init_security();
   ep.init_password();
