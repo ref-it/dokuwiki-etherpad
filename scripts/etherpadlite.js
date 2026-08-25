@@ -61,7 +61,7 @@ ep.on_disable = function() {
              jQuery('.ace-toggle-hidden').removeClass('ace-toggle-hidden').show();
              if (!ep.isSaveable) { // fix toolbar
                jQuery('#wiki__text').attr('readOnly','readOnly');
-               jQery('tool__bar').empty();
+               jQuery('#tool__bar').empty();
              }
              ep.opened = false;
              ep.on_disable_close();
