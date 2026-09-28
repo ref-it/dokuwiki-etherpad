@@ -3,6 +3,7 @@ var ep = { };
 ep.config = etherpad_lite_config;
 ep.aceWasEnabled = false;
 ep.cmWasEnabled = false;
+ep.pmWasEnabled = false;
 ep.isOwner = false;
 ep.readOnly = false;
 ep.isSaveable = false;
@@ -58,6 +59,7 @@ ep.on_disable = function() {
                     jQuery(".pad-action-buttons").hide();
                     jQuery(".nopad-action-buttons").show();
                     jQuery('.ace-toggle-hidden').removeClass('ace-toggle-hidden').show();
+                    jQuery('.pm-hidden-by-pad').removeClass('pm-hidden-by-pad').show();
                     if (!ep.isSaveable) { // fix toolbar
                         jQuery('#wiki__text').attr('readOnly','readOnly');
                         jQuery('#tool__bar').empty();
@@ -76,6 +78,7 @@ ep.on_disable = function() {
         jQuery(".pad-action-buttons").hide();
         jQuery(".nopad-action-buttons").show();
         jQuery('.ace-toggle-hidden').removeClass('ace-toggle-hidden').show();
+        jQuery('.pm-hidden-by-pad').removeClass('pm-hidden-by-pad').show();
         if (!ep.isSaveable) { // fix toolbar
             jQuery('#wiki__text').attr('readOnly','readOnly');
             jQuery('#tool__bar').empty();
@@ -86,6 +89,9 @@ ep.on_disable = function() {
         }
         if (ep.cmWasEnabled) {
             ep.cmShow();
+        }
+        if (ep.pmWasEnabled) {
+            ep.pmShow();
         }
     }
 };
@@ -113,6 +119,9 @@ ep.on_disable_close = function() {
                 }
                 if (ep.cmWasEnabled) {
                     ep.cmShow();
+                }
+                if (ep.pmWasEnabled) {
+                    ep.pmShow();
                 }
             }
         }
@@ -333,16 +342,68 @@ ep.cmIsEnabled = function() {
     return ($toggleLi.find('span.ui-icon-check').length == 0);
 };
 
+/* Prosemirror (WYSIWYG editor plugin). Two differences to ACE/CodeMirror:
+   its toggle state is not readable from the DOM - the plugin keeps it in
+   the global window.proseMirrorIsActive - and switching is asynchronous,
+   because the document is round-tripped through the server to convert it
+   between Prosemirror JSON and wiki syntax. So never read #wiki__text
+   right after ep.pmHide(), use ep.pmWhenSwitched(). All of this is a
+   no-op when the plugin is not installed. */
+ep.pmTimeout = 10000;
+
+ep.pmIsEnabled = function() {
+    return (window.proseMirrorIsActive === true);
+};
+
+ep.pmToggle = function() {
+    /* deliberately not filtered by :visible - with the plugin's
+       "force WYSIWYG" setting the button is hidden while it is active. */
+    jQuery('.plugin_prosemirror_useWYSIWYG').first().click();
+};
+
+ep.pmShow = function() {
+    if (ep.pmIsEnabled()) {return;}
+    ep.pmToggle();
+};
+
+ep.pmHide = function() {
+    if (!ep.pmIsEnabled()) {return;}
+    ep.pmToggle();
+};
+
+/* Calls back once Prosemirror is off and #wiki__text holds the wiki syntax
+   again - immediately if it was not enabled at all. Gives up after
+   ep.pmTimeout so that a failed switch cannot block opening the pad. */
+ep.pmWhenSwitched = function(callback) {
+    if (!ep.pmIsEnabled()) {
+        callback();
+        return;
+    }
+    var deadline = (new Date()).getTime() + ep.pmTimeout;
+    var poll = function() {
+        if (!ep.pmIsEnabled() || (new Date()).getTime() > deadline) {
+            callback();
+        } else {
+            self.setTimeout(poll, 100);
+        }
+    };
+    self.setTimeout(poll, 100);
+};
+
 ep.on_re_enable = function(reopen) {
     if (!reopen) {
         /* disable ACE, cache it => text is in wiki__text, ace can be restored. */
         ep.aceWasEnabled = ep.aceIsEnabled();
         ep.cmWasEnabled = ep.cmIsEnabled();
+        ep.pmWasEnabled = ep.pmIsEnabled();
     }
     ep.aceHide();
     ep.cmHide();
+    ep.pmHide();
 
-    self.setTimeout(ep.on_re_enable_cont, 500);
+    ep.pmWhenSwitched(function() {
+        self.setTimeout(ep.on_re_enable_cont, 500);
+    });
 };
 
 ep.on_re_enable_cont = function() {
@@ -385,6 +446,8 @@ ep.on_re_enable_cont = function() {
                 jQuery(".pad-action-buttons").show();
                 jQuery(".nopad-action-buttons").hide();
                 jQuery('.ace-toggle:visible').addClass('ace-toggle-hidden').hide();
+                jQuery('.plugin_prosemirror_useWYSIWYG:visible, #prosemirror__editor:visible')
+                    .addClass('pm-hidden-by-pad').hide();
                 jQuery('.pad-iframecontainer').empty();
                 jQuery('<iframe/>').addClass("pad-iframe").attr("src",data.url).appendTo(jQuery('.pad-iframecontainer'));
                 jQuery('.pad-resizable').resizable();
